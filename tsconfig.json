@@ -11,11 +11,21 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "jsx": "react-jsx",
-    "lib": ["ES2022", "DOM"],
+    "lib": [
+      "ES2022",
+      "DOM"
+    ],
     "forceConsistentCasingInFileNames": true,
     "noUncheckedIndexedAccess": true,
     "noEmit": false
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "output"]
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "output",
+    "src/dashboard/client"
+  ]
 }

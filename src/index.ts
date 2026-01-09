@@ -229,8 +229,12 @@ If no story name is provided, the next pending story from stories.json will be u
 // Export for programmatic use
 export { runPipeline, loadStories, getNextStory };
 
+
 // Run if called directly
-main().catch((error) => {
-  logger.error("Fatal error:", error);
-  process.exit(1);
-});
+import { fileURLToPath } from "url";
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  main().catch((error) => {
+    logger.error("Fatal error:", error);
+    process.exit(1);
+  });
+}
