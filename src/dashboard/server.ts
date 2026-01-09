@@ -770,23 +770,23 @@ function getDashboardHTML(): string {
 
 // Start server
 app.listen(PORT, async () => {
-  const url = \`http://localhost:\${PORT}\`;
-  console.log(\`
+  const url = `http://localhost:${PORT}`;
+  console.log(`
 ┌─────────────────────────────────────────────┐
 │                                             │
 │   📖 Bible AITA Dashboard                   │
 │                                             │
-│   Running at: \${url}              │
+│   Running at: ${url}              │
 │                                             │
 │   Press Ctrl+C to stop                      │
 │                                             │
 └─────────────────────────────────────────────┘
-\`);
+`);
 
   // Open browser automatically
   try {
     await open(url);
   } catch {
-    console.log(\`Open \${url} in your browser\`);
+    console.log(`Open ${url} in your browser`);
   }
 });

@@ -50,7 +50,10 @@ export async function generateVoiceOver(
   }
 
   // Extract and aggregate word timestamps
-  const wordTimestamps = aggregateCharactersToWords(response.alignment);
+  if (!response.alignment) {
+    throw new Error("No alignment data in ElevenLabs response");
+  }
+  const wordTimestamps = aggregateCharactersToWords(response.alignment as ElevenLabsAlignment);
 
   const duration =
     wordTimestamps.length > 0

@@ -69,7 +69,7 @@ export async function generateVideo(content: ContentOutput): Promise<VideoOutput
   const composition = await selectComposition({
     serveUrl: bundleLocation,
     id: "BibleAITA",
-    inputProps: props,
+    inputProps: props as unknown as Record<string, unknown>,
   });
 
   const outputPath = path.join(videosDir, `${id}.mp4`);
@@ -80,7 +80,7 @@ export async function generateVideo(content: ContentOutput): Promise<VideoOutput
     serveUrl: bundleLocation,
     codec: "h264",
     outputLocation: outputPath,
-    inputProps: props,
+    inputProps: props as unknown as Record<string, unknown>,
   });
 
   logger.info(`[${id}] Video rendered: ${outputPath}`);

@@ -1,13 +1,14 @@
+import React from "react";
 import { Composition } from "remotion";
 import { BibleAITA } from "./compositions/BibleAITA.js";
-import { BibleAITAPropsSchema } from "../types/remotion.js";
+import { BibleAITAPropsSchema, type BibleAITAProps } from "../types/remotion.js";
 
 export const RemotionRoot: React.FC = () => {
   return (
     <>
       <Composition
         id="BibleAITA"
-        component={BibleAITA}
+        component={BibleAITA as unknown as React.FC<Record<string, unknown>>}
         durationInFrames={30 * 75} // 75 seconds at 30fps (adjustable)
         fps={30}
         width={1080}
