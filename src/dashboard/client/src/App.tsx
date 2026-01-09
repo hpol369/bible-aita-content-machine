@@ -1,14 +1,41 @@
 import React, { useEffect, useState } from 'react';
-import { Activity, Video, FileText, CheckCircle, RefreshCw, Play, Search, Plus, Clock } from 'lucide-react';
+import { Activity, Video, FileText, CheckCircle, RefreshCw, Play, Search, Plus, Clock, Star, AlertTriangle, TrendingUp } from 'lucide-react';
 import { StatsCard } from './components/StatsCard';
 import { VideoModal } from './components/VideoModal';
 
-// Types (simplified for now)
+// Types
 interface DashboardData {
     videosRendered: number;
     contentGenerated: number;
     pendingStories: number;
     completedStories: number;
+}
+
+interface ScriptReview {
+    overallScore: number;
+    passed: boolean;
+    verdict: 'VIRAL_READY' | 'NEEDS_REVISION' | 'MAJOR_REWRITE';
+    predictedEngagement: 'LOW' | 'MEDIUM' | 'HIGH' | 'VIRAL';
+    criteria: {
+        hookStrength: number;
+        hookFeedback: string;
+        emotionalEngagement: number;
+        emotionalFeedback: string;
+        controversyLevel: number;
+        controversyFeedback: string;
+        relatability: number;
+        relatabilityFeedback: string;
+        pacing: number;
+        pacingFeedback: string;
+        revealImpact: number;
+        revealFeedback: string;
+        commentBait: number;
+        commentBaitFeedback: string;
+    };
+    strengths: string[];
+    weaknesses: string[];
+    revisionSuggestions: string[];
+    redFlags: string[];
 }
 
 interface ContentItem {
@@ -17,13 +44,18 @@ interface ContentItem {
     createdAt: string;
     duration?: number;
     videoPath?: string;
+    status?: string;
     storyData?: {
         primary_emotion: string;
     };
     aitaContent?: {
         post_title: string;
         post_body: string;
+        fake_comments?: Array<{ user: string; text: string; upvotes: number }>;
+        pinned_comment?: string;
+        cta?: string;
     };
+    review?: ScriptReview;
 }
 
 function App() {
@@ -53,7 +85,7 @@ function App() {
 
     useEffect(() => {
         fetchData();
-        const interval = setInterval(fetchData, 30000); // Poll every 30s
+        const interval = setInterval(fetchData, 30000);
         return () => clearInterval(interval);
     }, []);
 
@@ -61,21 +93,37 @@ function App() {
         if (isGenerating) return;
 
         const storyName = prompt("Enter story name (or leave empty for next in queue):");
-        if (storyName === null) return; // Cancelled
+        if (storyName === null) return;
 
         setIsGenerating(true);
         try {
             await fetch('/api/generate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ storyName, skipPosting: true }) // Default to skip posting for safety
+                body: JSON.stringify({ storyName, skipPosting: true })
             });
             alert('Generation started! Check the logs/console.');
-            // In a real app we'd show a toast or progress bar
         } catch (error) {
             alert('Failed to start generation');
         } finally {
             setIsGenerating(false);
+        }
+    };
+
+    const getScoreColor = (score: number) => {
+        if (score >= 85) return '#22c55e';
+        if (score >= 70) return '#eab308';
+        return '#ef4444';
+    };
+
+    const getVerdictBadge = (verdict: string) => {
+        switch (verdict) {
+            case 'VIRAL_READY':
+                return { bg: 'rgba(34, 197, 94, 0.2)', color: '#22c55e', icon: TrendingUp };
+            case 'NEEDS_REVISION':
+                return { bg: 'rgba(234, 179, 8, 0.2)', color: '#eab308', icon: AlertTriangle };
+            default:
+                return { bg: 'rgba(239, 68, 68, 0.2)', color: '#ef4444', icon: AlertTriangle };
         }
     };
 
@@ -193,64 +241,138 @@ function App() {
                         gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
                         gap: '24px'
                     }}>
-                        {content.map(item => (
-                            <div
-                                key={item.id}
-                                className="glass-panel"
-                                style={{
-                                    overflow: 'hidden',
-                                    cursor: 'pointer',
-                                    transition: 'transform 0.2s'
-                                }}
-                                onClick={() => setSelectedContent(item)}
-                                onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-4px)'}
-                                onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
-                            >
-                                <div style={{
-                                    aspectRatio: '9/16',
-                                    background: 'var(--bg-tertiary)',
-                                    position: 'relative',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center'
-                                }}>
-                                    {item.videoPath ? (
-                                        <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-                                            <video src={`/output/videos/${item.id}.mp4`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} muted />
-                                            <div style={{
-                                                position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.3)',
-                                                display: 'flex', alignItems: 'center', justifyContent: 'center'
-                                            }}>
-                                                <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                                    <Play size={24} fill="white" stroke="none" />
+                        {content.map(item => {
+                            const verdictStyle = item.review ? getVerdictBadge(item.review.verdict) : null;
+                            const VerdictIcon = verdictStyle?.icon;
+
+                            return (
+                                <div
+                                    key={item.id}
+                                    className="glass-panel"
+                                    style={{
+                                        overflow: 'hidden',
+                                        cursor: 'pointer',
+                                        transition: 'transform 0.2s'
+                                    }}
+                                    onClick={() => setSelectedContent(item)}
+                                    onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-4px)'}
+                                    onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                                >
+                                    <div style={{
+                                        aspectRatio: '9/16',
+                                        background: 'var(--bg-tertiary)',
+                                        position: 'relative',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
+                                    }}>
+                                        {item.videoPath ? (
+                                            <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+                                                <video src={`/output/videos/${item.id}.mp4`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} muted />
+                                                <div style={{
+                                                    position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.3)',
+                                                    display: 'flex', alignItems: 'center', justifyContent: 'center'
+                                                }}>
+                                                    <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                        <Play size={24} fill="white" stroke="none" />
+                                                    </div>
                                                 </div>
                                             </div>
+                                        ) : (
+                                            <FileText size={48} color="var(--text-muted)" />
+                                        )}
+
+                                        {/* Score Badge */}
+                                        {item.review && (
+                                            <div style={{
+                                                position: 'absolute',
+                                                top: '12px',
+                                                right: '12px',
+                                                background: 'rgba(0,0,0,0.8)',
+                                                padding: '8px 12px',
+                                                borderRadius: '8px',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '6px'
+                                            }}>
+                                                <Star size={14} fill={getScoreColor(item.review.overallScore)} color={getScoreColor(item.review.overallScore)} />
+                                                <span style={{
+                                                    fontSize: '14px',
+                                                    fontWeight: 700,
+                                                    color: getScoreColor(item.review.overallScore)
+                                                }}>
+                                                    {item.review.overallScore}
+                                                </span>
+                                            </div>
+                                        )}
+
+                                        {/* Duration Badge */}
+                                        <div style={{
+                                            position: 'absolute', bottom: '12px', left: '12px',
+                                            background: 'rgba(0,0,0,0.6)', padding: '4px 8px', borderRadius: '4px',
+                                            fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px'
+                                        }}>
+                                            <Clock size={12} />
+                                            {item.duration ? `${Math.round(item.duration)}s` : 'N/A'}
                                         </div>
-                                    ) : (
-                                        <FileText size={48} color="var(--text-muted)" />
-                                    )}
 
-                                    <div style={{
-                                        position: 'absolute', bottom: '12px', left: '12px',
-                                        background: 'rgba(0,0,0,0.6)', padding: '4px 8px', borderRadius: '4px',
-                                        fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px'
-                                    }}>
-                                        <Clock size={12} />
-                                        {item.duration ? `${Math.round(item.duration)}s` : 'N/A'}
+                                        {/* Verdict Badge */}
+                                        {item.review && verdictStyle && VerdictIcon && (
+                                            <div style={{
+                                                position: 'absolute', bottom: '12px', right: '12px',
+                                                background: verdictStyle.bg,
+                                                padding: '4px 8px',
+                                                borderRadius: '4px',
+                                                fontSize: '10px',
+                                                fontWeight: 600,
+                                                color: verdictStyle.color,
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '4px',
+                                                textTransform: 'uppercase'
+                                            }}>
+                                                <VerdictIcon size={10} />
+                                                {item.review.verdict.replace('_', ' ')}
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <div style={{ padding: '16px' }}>
+                                        <h3 style={{ fontSize: '15px', fontWeight: 600, marginBottom: '8px', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
+                                            {item.aitaContent?.post_title || item.storyName}
+                                        </h3>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: 'var(--text-secondary)' }}>
+                                            <span>{item.storyName}</span>
+                                            <span style={{ color: 'var(--accent-primary)' }}>{item.storyData?.primary_emotion}</span>
+                                        </div>
+
+                                        {/* Quick Engagement Prediction */}
+                                        {item.review && (
+                                            <div style={{
+                                                marginTop: '12px',
+                                                padding: '8px 12px',
+                                                background: 'var(--bg-tertiary)',
+                                                borderRadius: '6px',
+                                                fontSize: '12px',
+                                                display: 'flex',
+                                                justifyContent: 'space-between',
+                                                alignItems: 'center'
+                                            }}>
+                                                <span style={{ color: 'var(--text-secondary)' }}>Predicted:</span>
+                                                <span style={{
+                                                    fontWeight: 600,
+                                                    color: item.review.predictedEngagement === 'VIRAL' ? '#22c55e' :
+                                                           item.review.predictedEngagement === 'HIGH' ? '#3b82f6' :
+                                                           item.review.predictedEngagement === 'MEDIUM' ? '#eab308' : '#ef4444'
+                                                }}>
+                                                    {item.review.predictedEngagement}
+                                                </span>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
-
-                                <div style={{ padding: '16px' }}>
-                                    <h3 style={{ fontSize: '15px', fontWeight: 600, marginBottom: '8px', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
-                                        {item.aitaContent?.post_title || item.storyName}
-                                    </h3>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: 'var(--text-secondary)' }}>
-                                        <span>{item.storyName}</span>
-                                        <span style={{ color: 'var(--accent-primary)' }}>{item.storyData?.primary_emotion}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 )}
             </section>

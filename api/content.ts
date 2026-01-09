@@ -28,6 +28,46 @@ const sampleContent = [
         controversy_level: 8
       }
     },
+    review: {
+      overallScore: 87,
+      passed: true,
+      criteria: {
+        hookStrength: 9,
+        hookFeedback: "Excellent hook - 'tricking my brother' and 'bowl of soup' creates immediate intrigue and absurdity. The contrast is perfect clickbait.",
+        emotionalEngagement: 8,
+        emotionalFeedback: "Strong emotional pull - family betrayal, unfairness themes. The escalation to 'brother wants to kill me' adds drama.",
+        controversyLevel: 9,
+        controversyFeedback: "Perfect split potential. Some will side with Jacob's 'smart business move', others will call him manipulative. The blind father deception is polarizing.",
+        relatability: 8,
+        relatabilityFeedback: "Sibling rivalry, inheritance drama, favoritism - extremely relatable modern themes. Language is natural and casual.",
+        pacing: 8,
+        pacingFeedback: "Good escalation from soup deal to goat skin deception to death threats. Each paragraph adds new drama.",
+        revealImpact: 9,
+        revealFeedback: "The goat skin detail is memorable and will make viewers go 'wait, I know this story!' Strong Bible-to-Reddit translation.",
+        commentBait: 9,
+        commentBaitFeedback: "Clear NTA/YTA debate points. The CTA with emojis is engaging. Comments section will be a battlefield."
+      },
+      verdict: "VIRAL_READY",
+      strengths: [
+        "Hook immediately establishes absurd premise (inheritance for soup)",
+        "Multiple layers of deception create escalating drama",
+        "Perfect controversy balance - both sides have valid arguments"
+      ],
+      weaknesses: [
+        "Middle section could be tighter - some exposition drags",
+        "Mom's involvement could be highlighted more for extra drama",
+        "Ending could be punchier - 'It's been years' feels flat"
+      ],
+      revisionSuggestions: [
+        "Trim the hunting/farming backstory - get to the soup faster",
+        "Add a line about mom being the mastermind for extra controversy",
+        "End with a stronger emotional hook like 'I haven't seen my family in X years'"
+      ],
+      predictedEngagement: "VIRAL",
+      redFlags: [],
+      reviewedAt: "2026-01-09T10:35:00.000Z"
+    },
+    status: "approved",
     duration: 72,
     videoPath: null,
     createdAt: "2026-01-09T10:30:00.000Z"
@@ -58,6 +98,48 @@ const sampleContent = [
         controversy_level: 9
       }
     },
+    review: {
+      overallScore: 82,
+      passed: true,
+      criteria: {
+        hookStrength: 7,
+        hookFeedback: "Hook is decent but generic. 'Gift was accepted but mine wasn't' lacks punch. Consider leading with the rejection feeling or the dark thoughts.",
+        emotionalEngagement: 9,
+        emotionalFeedback: "Excellent emotional depth. The jealousy, rejection, and dark thoughts progression is visceral. Readers will feel the spiral.",
+        controversyLevel: 8,
+        controversyFeedback: "Good split - some will sympathize with rejection feelings, others will focus on the concerning dark thoughts. The 'some crops' vs 'firstborn' detail adds nuance.",
+        relatability: 9,
+        relatabilityFeedback: "Workplace favoritism, sibling comparison, feeling overlooked - universally relatable themes. The farming vs shepherding translates well to modern work.",
+        pacing: 7,
+        pacingFeedback: "Slow build. The farming backstory takes too long before reaching the conflict. Dark thoughts reveal comes late.",
+        revealImpact: 9,
+        revealFeedback: "The 'first murder in human history' reveal is powerful. The foreshadowing of dark thoughts makes it land perfectly.",
+        commentBait: 8,
+        commentBaitFeedback: "The INFO comment about sacrifice quality is clever engagement bait. Comments will debate effort vs outcome."
+      },
+      verdict: "VIRAL_READY",
+      strengths: [
+        "Dark thoughts foreshadowing creates tension that pays off in reveal",
+        "Emotional progression from hurt to resentment to darkness is compelling",
+        "INFO comment prompts deeper engagement with the story details"
+      ],
+      weaknesses: [
+        "Hook doesn't immediately grab - too generic for a scroll-stopping first line",
+        "Opening paragraphs are exposition-heavy before conflict hits",
+        "Could lean harder into the absurdity of the situation"
+      ],
+      revisionSuggestions: [
+        "Rewrite hook: 'AITA for wanting my brother dead because his gift was better than mine?'",
+        "Cut the farming/shepherding comparison - get to the rejection faster",
+        "Move 'dark thoughts' hint earlier to create tension throughout"
+      ],
+      predictedEngagement: "HIGH",
+      redFlags: [
+        "Dark thoughts content may trigger some platform warnings - ensure reveal provides context"
+      ],
+      reviewedAt: "2026-01-08T14:25:00.000Z"
+    },
+    status: "approved",
     duration: 68,
     videoPath: null,
     createdAt: "2026-01-08T14:20:00.000Z"
@@ -88,6 +170,48 @@ const sampleContent = [
         controversy_level: 10
       }
     },
+    review: {
+      overallScore: 91,
+      passed: true,
+      criteria: {
+        hookStrength: 10,
+        hookFeedback: "Perfect hook. 'Affair with married woman' + 'arranged husband's death' is maximum intrigue. Impossible to scroll past.",
+        emotionalEngagement: 10,
+        emotionalFeedback: "Exceptional emotional journey. Betrayal, abuse of power, murder, guilt - hits every emotional beat. The confession framing adds vulnerability.",
+        controversyLevel: 7,
+        controversyFeedback: "Less controversial because it's clearly YTA - the calculated murder removes debate. However, the power/consent discussion adds nuance.",
+        relatability: 8,
+        relatabilityFeedback: "Power abuse, workplace affairs, cover-ups - modern scandals follow this pattern. CEO framing works well.",
+        pacing: 9,
+        pacingFeedback: "Excellent escalation: lust → affair → pregnancy → failed cover-ups → murder → guilt. Each attempt to fix makes it worse.",
+        revealImpact: 10,
+        revealFeedback: "The lamb metaphor is brilliant. The 'I was the rich man' moment is a gut punch. King David reveal lands perfectly.",
+        commentBait: 9,
+        commentBaitFeedback: "Even though YTA is obvious, people will engage with the power dynamics and consent discussions. High comment quality expected."
+      },
+      verdict: "VIRAL_READY",
+      strengths: [
+        "Hook is absolutely perfect - maximum intrigue in minimum words",
+        "The escalating failed cover-ups create compelling narrative tension",
+        "Lamb metaphor revelation is a masterclass in storytelling payoff"
+      ],
+      weaknesses: [
+        "Too clearly YTA - less controversy means less debate in comments",
+        "The 'multiple wives' line might confuse modern audiences",
+        "CTA feels weak compared to the story's weight"
+      ],
+      revisionSuggestions: [
+        "Add a line exploring power dynamics to spark consent debate in comments",
+        "Consider alternative CTA that prompts discussion rather than voting",
+        "Possibly add a detail about Bathsheba's perspective for more controversy"
+      ],
+      predictedEngagement: "VIRAL",
+      redFlags: [
+        "Heavy content (murder, affair) - may need sensitive content flags on some platforms"
+      ],
+      reviewedAt: "2026-01-07T09:20:00.000Z"
+    },
+    status: "approved",
     duration: 85,
     videoPath: null,
     createdAt: "2026-01-07T09:15:00.000Z"
